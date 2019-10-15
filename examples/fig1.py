@@ -201,8 +201,6 @@ def plot_pspShapes(ax):
             color="r", va="bottom", ha="center")
     ax.legend(fontsize=8)
 
-
-
     pass
 
 
