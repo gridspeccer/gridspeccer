@@ -57,7 +57,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [
@@ -225,7 +225,7 @@ def plot_boxAndWhiskers(ax):
     ax.boxplot(data[1:],
                sym='x',
                widths=0.5,
-               positions=range(1,6))
+               positions=list(range(1,6)))
     ax.set_xlim([-0.6, 5.6])
     ax.set_yscale('log')
     #ax.text( 0.1, 1e-3, 'data for\nFig. 4B', ha='center')
@@ -247,7 +247,7 @@ def plot_otherDistr1(ax):
     distributions = core.get_data("fig4/fig4_otherDistr.npy")
 
     numDistrs = len(distributions[:,0])
-    x = np.array(range(0, len(distributions[0,:])))
+    x = np.array(list(range(0, len(distributions[0,:]))))
     width = 0.5
 
     
@@ -271,7 +271,7 @@ def plot_otherDistr2(ax):
     distributions = core.get_data("fig4/fig4_otherDistr.npy")
 
     numDistrs = len(distributions[:,0])
-    x = np.array(range(0, len(distributions[0,:])))
+    x = np.array(list(range(0, len(distributions[0,:]))))
     width = 0.5
 
     
@@ -295,7 +295,7 @@ def plot_otherDistr3(ax):
     distributions = core.get_data("fig4/fig4_otherDistr.npy")
 
     numDistrs = len(distributions[:,0])
-    x = np.array(range(0, len(distributions[0,:])))
+    x = np.array(list(range(0, len(distributions[0,:]))))
     width = 0.5
 
     
@@ -319,7 +319,7 @@ def plot_otherDistr4(ax):
     distributions = core.get_data("fig4/fig4_otherDistr.npy")
 
     numDistrs = len(distributions[:,0])
-    x = np.array(range(0, len(distributions[0,:])))
+    x = np.array(list(range(0, len(distributions[0,:]))))
     width = 0.5
 
     
@@ -343,7 +343,7 @@ def plot_otherDistr5(ax):
     distributions = core.get_data("fig4/fig4_otherDistr.npy")
 
     numDistrs = len(distributions[:,0])
-    x = np.array(range(0, len(distributions[0,:])))
+    x = np.array(list(range(0, len(distributions[0,:]))))
     width = 0.5
 
     

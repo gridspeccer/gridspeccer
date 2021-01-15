@@ -44,7 +44,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [

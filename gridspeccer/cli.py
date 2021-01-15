@@ -16,7 +16,7 @@ def plot_all():
     plotscripts = glob.glob(osp.join(osp.dirname(osp.abspath(__file__)),
         "fig*.py"))
 
-    plotscripts = map(lambda x: osp.splitext(osp.basename(x))[0], plotscripts)
+    plotscripts = [osp.splitext(osp.basename(x))[0] for x in plotscripts]
 
     for name in plotscripts:
         core.make_figure(name)
@@ -25,7 +25,7 @@ def plot_all():
 if __name__ == "__main__":
     import sys
     from inspect import isfunction, getargspec
-    local_globals = globals().keys()
+    local_globals = list(globals().keys())
 
     def is_noarg_function(f):
         "Test if f is valid function and has no arguments"
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     def show_functions():
         functions.sort()
         for f in functions:
-            print f
+            print(f)
     functions = [f for f in local_globals if is_noarg_function(f)]
     if len(sys.argv) <= 1 or sys.argv[1] == "-h":
         show_functions()
@@ -51,5 +51,5 @@ if __name__ == "__main__":
                 run = globals()[launch]
                 run()
             else:
-                print launch, "not part of functions:"
+                print(launch, "not part of functions:")
                 show_functions()

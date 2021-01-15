@@ -95,7 +95,7 @@ def make_figure(name):
     # call possible axes adjustment script for figure
     getattr(plotscript, "adjust_axes", lambda axes: None)(axes)
 
-    for k, ax in axes.iteritems():
+    for k, ax in axes.items():
         log.info("Plotting subfigure: {}".format(k))
         getattr(plotscript, "plot_{}".format(k), lambda ax: log.warn(
             "Plotscript missing for subplot <{}> in figure <{}>!"
@@ -130,7 +130,7 @@ def make_axes(gridspec, fig_kwargs=None):
     fig = p.figure(**fig_kwargs)
     axes = {}
 
-    for k, gs in gridspec.iteritems():
+    for k, gs in gridspec.items():
         # we just add a label to make sure all axes are actually created
         log.debug("Creating subplot: {}".format(k))
         axes[k] = fig.add_subplot(gs, label=k)
@@ -185,7 +185,7 @@ def show_axis(ax):
     ax.get_xaxis().set_visible(True)
     ax.get_yaxis().set_visible(True)
 
-def hide_ticks(ax, axis=u'both', minormajor=u'both'):
+def hide_ticks(ax, axis='both', minormajor='both'):
     ax.tick_params(axis=axis, which=minormajor,length=0)
 
 def make_spines(ax):
