@@ -10,9 +10,9 @@ import copy
 import numpy as np
 import matplotlib.patches as patches
 
-from . import core
-from . import aux
-from .core import log
+from gridspeccer import core
+from gridspeccer import aux
+from gridspeccer.core import log
 
 
 def get_gridspec():

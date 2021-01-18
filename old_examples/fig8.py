@@ -10,11 +10,11 @@ from matplotlib import cm
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from .core import log
-from . import aux
+from gridspeccer import core
+from gridspeccer.core import log
+from gridspeccer import aux
 
 
 def get_gridspec():

@@ -9,8 +9,8 @@ import pylab as p
 import copy
 import numpy as np
 
-from . import core
-from .core import log
+from gridspeccer import core
+from gridspeccer.core import log
 
 
 def get_gridspec():

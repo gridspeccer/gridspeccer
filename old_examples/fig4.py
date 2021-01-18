@@ -8,10 +8,10 @@ from matplotlib import collections as coll
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from .core import log
+from gridspeccer import core
+from gridspeccer.core import log
 
 
 def get_gridspec():

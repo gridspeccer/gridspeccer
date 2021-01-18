@@ -15,7 +15,7 @@ import matplotlib.ticker as ticker
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 from . import core
 import sys
 

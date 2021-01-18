@@ -11,18 +11,10 @@ import os
 import os.path as osp
 import pylab as p
 import string
+import sys
 
 np.random.seed(424242)
 
-folders = {}
-folders["root"] = osp.join(osp.dirname(osp.abspath(__file__)), "..", "..")
-
-folders["fig"] = osp.join(folders["root"], "fig")
-# Create the fig folder if it does not exists
-if not osp.exists(folders["fig"]):
-	os.makedirs(folders["fig"])
-
-folders["data"] = osp.join(folders["root"], "data")
 
 def make_log(name):
     import logging
@@ -108,16 +100,23 @@ def make_figure(name):
     save_figure(fig, name)
     p.close(fig)
 
+
 def get_plotscript(name):
     try:
-        exec("from . import {} as plotscript".format(name))
+        sys.path.append(os.getcwd())
+        import importlib
+        plotscript = importlib.import_module(name)
     except ImportError:
         log.error("Plotscript for figure {} not found!".format(name))
         raise
+    sys.path.pop(-1)
     return plotscript
 
+
 def save_figure(fig, name):
-    fig.savefig(osp.join(folders["fig"], name))
+    if not osp.isdir(osp.join("..", "fig")):
+        os.makedirs(osp.join("..", "fig"))
+    fig.savefig(osp.join("..", "fig", f"{name}.pdf"))
 
 
 def make_axes(gridspec, fig_kwargs=None):
@@ -139,16 +138,16 @@ def make_axes(gridspec, fig_kwargs=None):
 
 
 def get_data(filename):
-    return np.load(osp.join(folders["data"], filename))
+    return np.load(osp.join("..", "data", filename))
 
 def plot_labels(axes, labels_to_plot, xpos_default=.04, ypos_default=.90,
         label_xpos={}, label_ypos={}, label_color={}, fontdict={}):
 
     for l, c in zip((l for l in labels_to_plot),
-            string.ascii_uppercase):
+            string.ascii_lowercase):
         log.info("Subplot {0} receives label {1}".format( l, c ))
         c = c
-        plot_caption(axes[l], c,
+        plot_caption(axes[l], "\\textbf{" + c + "}",
                 label_xpos.get(l, xpos_default),
                 label_ypos.get(l, ypos_default), label_color.get(l, "k"),
                 fontdict=fontdict)

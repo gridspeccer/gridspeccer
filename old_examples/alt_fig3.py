@@ -12,8 +12,8 @@ import numpy as np
 import scipy as scp
 import scipy.special as special
 
-from . import core
-from .core import log
+from gridspeccer import core
+from gridspeccer.core import log
 
 
 def get_gridspec():
