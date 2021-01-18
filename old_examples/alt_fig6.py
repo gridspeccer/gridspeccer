@@ -8,11 +8,11 @@ from matplotlib import collections as coll
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from . import aux
-from .core import log
+from gridspeccer import core
+from gridspeccer import aux
+from gridspeccer.core import log
 
 
 def get_gridspec():
@@ -21,16 +21,16 @@ def get_gridspec():
     """
     # TODO: Adjust positioning
     gs_main = gs.GridSpec(1, 1, hspace=0.01,
-                          left=0.06, right=0.95, top=.98, bottom=0.01)
-    gs_top = gs.GridSpecFromSubplotSpec(2, 1, gs_main[0, 0], wspace=0.2,
-                                        height_ratios=[1., 1.])
+                          left=0.03, right=0.97, top=.95, bottom=0.01)
+    gs_top = gs.GridSpecFromSubplotSpec(1, 2, gs_main[0, 0], hspace=0.05,
+                                        width_ratios=[1., 1.])
 
     return {
         # these are needed for proper labelling
         # core.make_axes takes care of them
 
         "mnistTsne": gs_top[0, 0],
-        "fashionTsne": gs_top[1, 0]
+        "fashionTsne": gs_top[0, 1]
     }
 
 
@@ -39,7 +39,7 @@ def adjust_axes(axes):
         Settings for all plots.
     """
     # TODO: Uncomment & decide for each subplot!
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [ 'mnistTsne', 'fashionTsne'
@@ -62,8 +62,8 @@ def plot_labels(axes):
 
 
 def get_fig_kwargs():
-    width = 6.
-    alpha = 2.
+    width = 10.
+    alpha = .5
     return {"figsize": (width, alpha*width)}
 
 
@@ -81,8 +81,8 @@ def plot_fashionTsne(ax):
 
     # get the data
     nImages = 150
-    images = core.get_data('figDream/fashionImages.npy')
-    positions = core.get_data('figDream/fashionPositions.npy')
+    images = core.get_data('fig6/fashionImages.npy')
+    positions = core.get_data('fig6/fashionPositions.npy')
     picSize = (12, 12)
 
     # trim the data
@@ -98,8 +98,8 @@ def plot_mnistTsne(ax):
 
     # get the data
     nImages = 150
-    images = core.get_data('figDream/mnistImages.npy')
-    positions = core.get_data('figDream/mnistPositions.npy')
+    images = core.get_data('fig6/mnistImages.npy')
+    positions = core.get_data('fig6/mnistPositions.npy')
     picSize = (12, 12)
 
     # trim the data

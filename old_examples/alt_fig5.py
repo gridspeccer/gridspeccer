@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from .core import log
-from . import aux
+from gridspeccer import core
+from gridspeccer.core import log
+from gridspeccer import aux
 
 
 def get_gridspec():
@@ -98,7 +98,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [
@@ -218,7 +218,7 @@ def plot_fashionIterError(ax):
 
     # Load the data
     mixtureMatrix = core.get_data('fig5/fashionConfMatrix.npy')
-    print("Mixture matrix of the fMNIST dataset: {}".format(mixtureMatrix))
+    print(("Mixture matrix of the fMNIST dataset: {}".format(mixtureMatrix)))
     labels = ['T', 'Tr', 'S']
 
     # Do the plot
@@ -286,7 +286,7 @@ def plot_compPics(ax):
     # Plot the upper 8 examples (originals)
     pic = np.ones((( N_vertical + 1) * frame + N_vertical * picSize[0] + half,
                    (N_horizontal + 1) * frame + N_horizontal * picSize[1])) * 255.
-    for counter in xrange(N_vertical * N_horizontal):
+    for counter in range(N_vertical * N_horizontal):
         j = counter % N_horizontal
         i = int(counter / N_horizontal)
         picVec = respImages[counter, :]
@@ -323,7 +323,7 @@ def plot_compLabel(ax):
              interpolation='nearest',
              extent=(-50., 200., -.5,N_labels - .5))
              #extent=(-.5, N_labels - .5,200.,-50.))
-    ax.set_yticks(range(N_labels))
+    ax.set_yticks(list(range(N_labels)))
     ax.set_yticklabels(labels)
     for tick in ax.xaxis.get_major_ticks():
                 tick.label.set_fontsize(11)

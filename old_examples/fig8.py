@@ -10,11 +10,11 @@ from matplotlib import cm
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from .core import log
-from . import aux
+from gridspeccer import core
+from gridspeccer.core import log
+from gridspeccer import aux
 
 
 def get_gridspec():
@@ -91,7 +91,7 @@ def adjust_axes(axes):
 	"""
 		Settings for all plots.
 	"""
-	for ax in axes.itervalues():
+	for ax in axes.values():
 		core.hide_axis(ax)
 
 	for k in [
@@ -269,7 +269,7 @@ def plot_resp(ax):
 	# Plot the upper 8 examples (originals)
 	pic = np.ones((( N_vertical + 1) * frame + N_vertical * picSize[0] + half,
 				   (N_horizontal + 1) * frame + N_horizontal * picSize[1])) * 255.
-	for counter in xrange(N_vertical * N_horizontal):
+	for counter in range(N_vertical * N_horizontal):
 		j = counter % N_horizontal
 		i = int(counter / N_horizontal)
 		picVec = respImages[counter, :]
@@ -305,7 +305,7 @@ def plot_label(ax):
 			 aspect='auto',
 			 interpolation='nearest',
 			 extent=(-.5, N_labels - .5,200.,-50.))
-	ax.set_xticks(range(N_labels))
+	ax.set_xticks(list(range(N_labels)))
 	ax.set_xticklabels(labels)
 	for tick in ax.yaxis.get_major_ticks():
                 tick.label.set_fontsize(8)

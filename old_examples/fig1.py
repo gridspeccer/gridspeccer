@@ -9,8 +9,8 @@ import pylab as p
 import copy
 import numpy as np
 
-from . import core
-from .core import log
+from gridspeccer import core
+from gridspeccer.core import log
 
 
 def get_gridspec():
@@ -43,7 +43,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [
@@ -228,7 +228,7 @@ def Vpsp_curr_exp(weight=None, neuron_params=None, set_singlepara=None,
         }
 
     if set_singlepara != None:
-        for i in xrange(len(set_singlepara) / 2):
+        for i in range(len(set_singlepara) / 2):
             neuron_params[set_singlepara[i * 2]] = set_singlepara[i * 2 + 1]
 
     if weight == None:
@@ -259,6 +259,6 @@ def Vpsp_curr_exp(weight=None, neuron_params=None, set_singlepara=None,
     if plot == True:
         p.ion()
         ax.plot(A_se)
-        print 'Theo tmax: ', tmax
-        print 'Theo Amax: ', weight * (1. / (c_m * (1. / tau_syn - 1. / tau_m))) * (p.exp(- tmax / tau_m) - p.exp(- tmax / tau_syn)) * scalfac
+        print('Theo tmax: ', tmax)
+        print('Theo Amax: ', weight * (1. / (c_m * (1. / tau_syn - 1. / tau_m))) * (p.exp(- tmax / tau_m) - p.exp(- tmax / tau_syn)) * scalfac)
     return A_se

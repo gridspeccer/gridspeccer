@@ -8,11 +8,11 @@ from matplotlib import collections as coll
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from . import aux
-from .core import log
+from gridspeccer import core
+from gridspeccer import aux
+from gridspeccer.core import log
 
 
 def get_gridspec():
@@ -39,7 +39,7 @@ def adjust_axes(axes):
         Settings for all plots.
     """
     # TODO: Uncomment & decide for each subplot!
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [

@@ -15,7 +15,7 @@ import matplotlib.ticker as ticker
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 from . import core
 import sys
 
@@ -41,7 +41,7 @@ def suppPlotDistributions(ax, sampled, target, errorBar=True):
     errDown = sampledMedian - sampled25
     errUp = sampled75 - sampledMedian
 
-    x = np.array(range(0, len(sampledMedian)))
+    x = np.array(list(range(0, len(sampledMedian))))
     # make the bar plots
     ylabels = ['0.05', '0.1', '0.2']
 
@@ -90,7 +90,7 @@ def suppPlotThreeDistributions(ax, sampledP, sampledS, target, errorBar=True):
     errDownS = sampledMedianS - sampled25S
     errUpS = sampled75S - sampledMedianS
 
-    x = np.array(range(0, len(sampledMedianP)))
+    x = np.array(list(range(0, len(sampledMedianP))))
 
     
     ax.bar(x, target, width=0.27, label='target',
@@ -237,12 +237,12 @@ def plotITLTraining(ax, abstractRatio, classRatio, iterNumb):
     A75 = np.percentile(abstractRatio, 75, axis=0)
     A25 = np.percentile(abstractRatio, 25, axis=0)
 
-    print('Abstract class ratio is: {0}+{1}-{2}'.format(Amedian,
+    print(('Abstract class ratio is: {0}+{1}-{2}'.format(Amedian,
                                                         A75-Amedian,
-                                                        Amedian-A25))
-    print('Hardware class ratio is: {0}+{1}-{2}'.format(CRmedian[-1],
+                                                        Amedian-A25)))
+    print(('Hardware class ratio is: {0}+{1}-{2}'.format(CRmedian[-1],
                                                         CR75[-1]-CRmedian[-1],
-                                                        CRmedian[-1]-CR25[-1]))
+                                                        CRmedian[-1]-CR25[-1])))
 
     ax.plot(iterNumb, CRmedian, linewidth=1.5, color='xkcd:black',
             label='hardware')
@@ -294,12 +294,12 @@ def plotITLTrainingError(ax, abstractRatio, classRatio, iterNumb):
     A75 = np.percentile(errorAbstract, 75, axis=0)
     A25 = np.percentile(errorAbstract, 25, axis=0)
 
-    print('Abstract error ratio is: {0}+{1}-{2}'.format(Amedian,
+    print(('Abstract error ratio is: {0}+{1}-{2}'.format(Amedian,
                                                         A75-Amedian,
-                                                        Amedian-A25))
-    print('Hardware error ratio is: {0}+{1}-{2}'.format(CRmedian[-1],
+                                                        Amedian-A25)))
+    print(('Hardware error ratio is: {0}+{1}-{2}'.format(CRmedian[-1],
                                                         CR75[-1]-CRmedian[-1],
-                                                        CRmedian[-1]-CR25[-1]))
+                                                        CRmedian[-1]-CR25[-1])))
 
     ax.plot(iterNumb, CRmedian, linewidth=2, color='xkcd:black',
             label='hardware')
@@ -482,7 +482,7 @@ def plotLabel(ax, imageVector, labels, label):
                  interpolation='nearest',
                  extent=(0., 1., -.5,N_labels - .5))
 
-    ax.set_yticks(range(N_labels))
+    ax.set_yticks(list(range(N_labels)))
     ax.set_yticklabels(labels, fontsize=6)
     ax.tick_params(width=0, length=0)
     ax.set_xticks([], [])
@@ -492,7 +492,7 @@ def plotLabel(ax, imageVector, labels, label):
     pass
 
 
-def plotExamplePictures(ax, original, picSizeRed, picSize, grid, indices=range(200)):
+def plotExamplePictures(ax, original, picSizeRed, picSize, grid, indices=list(range(200))):
 
 
     # Layout specification
@@ -507,7 +507,7 @@ def plotExamplePictures(ax, original, picSizeRed, picSize, grid, indices=range(2
                    (N_horizontal + 1) * frame + N_horizontal * picSize[1])) * 255
 
     # Plot the upper 8 examples (originals)
-    for counter in xrange(N_vertical * N_horizontal):
+    for counter in range(N_vertical * N_horizontal):
         i = counter % N_vertical
         j = int(counter / N_vertical)
         picVec = original[indices[counter], 1:]
@@ -517,7 +517,7 @@ def plotExamplePictures(ax, original, picSizeRed, picSize, grid, indices=range(2
             (j + 1) * frame + j * picSize[1]: (j + 1) * frame + (j + 1) * picSize[1]] = picCounter
 
     # Plot the lower 8 examples (reduced)
-    for counter in xrange(N_vertical * N_horizontal):
+    for counter in range(N_vertical * N_horizontal):
         i = counter % N_vertical + 2
         j = int(counter / N_vertical)
         picVec = original[indices[counter], 1:]
@@ -737,7 +737,7 @@ def plotBoxPlot(ax, data):
     ax.boxplot(data[1:],
                sym='x',
                widths=0.5,
-               positions=range(1,N))
+               positions=list(range(1,N)))
     ax.set_xlim([-0.6, N - 0.4])
     ax.set_yscale('log')
     ax.set_ylabel(

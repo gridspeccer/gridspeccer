@@ -9,9 +9,9 @@ import pylab as p
 import copy
 import numpy as np
 
-from . import core
-from .core import log
-from . import aux
+from gridspeccer import core
+from gridspeccer.core import log
+from gridspeccer import aux
 
 
 def get_gridspec():
@@ -44,7 +44,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [

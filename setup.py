@@ -1,8 +1,8 @@
- #!/usr/bin/env python
+#!/usr/bin/env python
 
 from setuptools import setup, find_packages
 
-version = "0.1.0pre"
+version = "0.1.0"
 
 setup(name='Gridspeccer',
       version=version,
@@ -10,18 +10,16 @@ setup(name='Gridspeccer',
       author='Oliver Breitwieser',
       author_email='oliver.breitwieser@kip.uni-heidelberg.de',
       url='https://github.com/obreitwi/gridspeccer',
-      packages=["gridspec"],
-      package_dir={
-          "gridspec": "src/gridspec",
-          },
-      package_data={
-          "gridspec": ["defaults/matplotlibrc"],
-          },
+      packages=find_packages(include=['gridspeccer', 'gridspeccer.*']),
       entry_points={
           "console_scripts": [
-              "gridspeccer = gridspeccer.cli:main"
+              "gridspeccer = gridspeccer.cli:plot"
           ]},
+      package_data={
+          "gridspeccer": ["defaults/matplotlibrc", "defaults/tex_matplotlibrc"],
+      },
+      include_package_data=True,
       license="GNUv3",
       zip_safe=True,
-      install_requires=["matplotlib"],
+      install_requires=["matplotlib", "scikit-image"],
       )

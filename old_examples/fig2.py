@@ -8,10 +8,10 @@ from matplotlib import collections as coll
 import pylab as p
 import copy
 import numpy as np
-from scipy.misc import imresize
+from skimage.transform import resize
 
-from . import core
-from .core import log
+from gridspeccer import core
+from gridspeccer.core import log
 
 
 def get_gridspec():
@@ -39,7 +39,7 @@ def adjust_axes(axes):
         Settings for all plots.
     """
     # TODO: Uncomment & decide for each subplot!
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [
@@ -121,7 +121,7 @@ def plotExamplePictures(ax, original):
                    (N_horizontal + 1) * frame + N_horizontal * picSize[1])) * 255
 
     # Plot the upper 8 examples (originals)
-    for counter in xrange(N_vertical * N_horizontal):
+    for counter in range(N_vertical * N_horizontal):
         i = counter % N_vertical
         j = int(counter / N_vertical)
         picVec = original[counter, 1:]
@@ -131,7 +131,7 @@ def plotExamplePictures(ax, original):
             (j + 1) * frame + j * picSize[1]: (j + 1) * frame + (j + 1) * picSize[1]] = picCounter
 
     # Plot the lower 8 examples (reduced)
-    for counter in xrange(N_vertical * N_horizontal):
+    for counter in range(N_vertical * N_horizontal):
         i = counter % N_vertical + 2
         j = int(counter / N_vertical)
         picVec = original[counter, 1:]

@@ -10,9 +10,9 @@ import copy
 import numpy as np
 import matplotlib.patches as patches
 
-from . import core
-from . import aux
-from .core import log
+from gridspeccer import core
+from gridspeccer import aux
+from gridspeccer.core import log
 
 
 def get_gridspec():
@@ -47,7 +47,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for ax in axes.itervalues():
+    for ax in axes.values():
         core.hide_axis(ax)
 
     for k in [
@@ -154,7 +154,7 @@ def plot_distr(ax):
     sim_distr = core.get_data('fig2/sampling_illustr_sim.npy')
 
 
-    x = np.array(range(0, len(sim_distr)))
+    x = np.array(list(range(0, len(sim_distr))))
     # make the bar plots
     ylabels = ['0.05', '0.1', '0.2']
     ax.bar(x, theo_distr, width=0.35, label='target',
