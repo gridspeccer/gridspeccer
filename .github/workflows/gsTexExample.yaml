@@ -1,0 +1,28 @@
+# This is a basic workflow to help you get started with Actions
+
+name: install and test module
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  gridspeccerTexExample:
+    runs-on: ubuntu-latest
+    container:
+      image: danteev/texlive
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 setup.py install
+    - name: Make the plot
+      run: |
+        cd examples
+        gridspeccer --mplrc ../defaults/tex_matplotlibrc
