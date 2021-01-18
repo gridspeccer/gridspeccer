@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        python3 setup.py install
+        pip install .
     - name: Make the plot
       run: |
         cd examples
