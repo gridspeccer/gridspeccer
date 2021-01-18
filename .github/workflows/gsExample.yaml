@@ -16,16 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9.1
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         python3 setup.py install
     - name: Make the plot
       run: |
         cd examples
         gridspeccer
-    - name: 'Upload PDFs as artifacts'
+    - name: 'Upload PDF as artifacts'
       uses: actions/upload-artifact@v2
       with:
-        name: compiledFigPDFs
-        path: figs/*.pdf
+        name: pdf
+        path: fig/*.pdf

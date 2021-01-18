@@ -26,3 +26,8 @@ jobs:
       run: |
         cd examples
         gridspeccer --mplrc ../defaults/tex_matplotlibrc
+    - name: 'Upload PDF as artifacts'
+      uses: actions/upload-artifact@v2
+      with:
+        name: pdf
+        path: fig/*.pdf
