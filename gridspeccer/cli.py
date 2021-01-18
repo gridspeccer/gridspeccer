@@ -18,7 +18,7 @@ def plot():
     parser = argparse.ArgumentParser(prog='gridspeccer',
                                      description='Plotting tool for easier poisitioning.')
     parser.add_argument('--mplrc', help='Location of a matplotlibrc to be used.',
-                        default=osp.join(osp.dirname(osp.abspath(__file__)), "..", "defaults", "matplotlibrc"))
+                        default=osp.join(osp.dirname(osp.abspath(__file__)), "defaults", "matplotlibrc"))
     parser.add_argument('data', nargs='*', help='files to look at and folders to look through for fig*.py files')
     args = parser.parse_args()
     if not osp.isfile(args.mplrc):

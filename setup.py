@@ -15,6 +15,10 @@ setup(name='Gridspeccer',
           "console_scripts": [
               "gridspeccer = gridspeccer.cli:plot"
           ]},
+      package_data={
+          "gridspeccer": ["defaults/matplotlibrc", "defaults/tex_matplotlibrc"],
+      },
+      include_package_data=True,
       license="GNUv3",
       zip_safe=True,
       install_requires=["matplotlib", "scikit-image"],
