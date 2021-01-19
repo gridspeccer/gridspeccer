@@ -1,0 +1,63 @@
+name: lint
+on:
+  [push, pull_request]
+jobs:
+  pyright:
+    name: lint with pyright
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.1
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install .
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: get pyright
+        run: npm install -g pyright
+      - name: pyright
+        run: pyright
+  pylint:
+    name: lint with pylint
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.1
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install .
+      - name: get pylint
+        run: |
+          python3 -m pip install pylint
+      - name: pylint
+        run: pylint * --ignore=old_examples --max-line-length=120
+  flake8:
+    name: lint with flake8
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.1
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install .
+      - name: get flake8
+        run: |
+          python3 -m pip install flake8
+      - name: flake8
+        run: flake8 --exclude=old_examples --max-line-length=120

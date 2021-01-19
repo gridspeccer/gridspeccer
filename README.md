@@ -10,9 +10,11 @@ With the optional argument `--mplrc [file]` one can specify a matplotlibrc to be
 
 A standalone plot file that does not need data is `examples`, this is also used for a unit test (TODO).
 
-![install module](https://github.com/JulianGoeltz/gridspeccer/workflows/install%20module/badge.svg)
-![gsExample with pseudo tex](https://github.com/JulianGoeltz/gridspeccer/workflows/gsExample%20with%20pseudo%20tex/badge.svg)
-![gsExample with tex](https://github.com/JulianGoeltz/gridspeccer/workflows/gsExample%20with%20tex/badge.svg?branch=master)
+[![linting](https://github.com/JulianGoeltz/gridspeccer/workflows/lint/badge.svg)](https://github.com/JulianGoeltz/gridspeccer/actions?query=workflow%3Alint)
+
+[![install module](https://github.com/JulianGoeltz/gridspeccer/workflows/install%20module/badge.svg)](https://github.com/JulianGoeltz/gridspeccer/actions?query=workflow%3A%22install+module%22)
+[![gsExample with pseudo tex](https://github.com/JulianGoeltz/gridspeccer/workflows/gsExample%20with%20pseudo%20tex/badge.svg)](https://github.com/JulianGoeltz/gridspeccer/actions?query=workflow%3A%22gsExample+with+pseudo+tex%22)
+[![gsExample with tex](https://github.com/JulianGoeltz/gridspeccer/workflows/gsExample%20with%20tex/badge.svg?branch=master)](https://github.com/JulianGoeltz/gridspeccer/actions?query=workflow%3A%22gsExample+with+tex%22)
 
 Many old examples that are not executable at the moment can be found in `old_examples`, to serve as inspiration for other plots.
 
