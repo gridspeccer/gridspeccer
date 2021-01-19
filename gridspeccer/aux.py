@@ -522,10 +522,10 @@ def plotExamplePictures(ax, original, picSizeRed, picSize, grid, indices=list(ra
         j = int(counter / N_vertical)
         picVec = original[indices[counter], 1:]
         picCounter = np.reshape(picVec, picSize)
-        picCounter = imresize(picCounter, picSizeRed, interp='nearest')
+        picCounter = resize(picCounter, picSizeRed, interp='nearest')
         median = np.percentile(picCounter, 50)
         picCounter = ((np.sign(picCounter - median) + 1) / 2) * 255.
-        picCounter = imresize(picCounter, picSize, interp='nearest')
+        picCounter = resize(picCounter, picSize, interp='nearest')
 
         pic[(i + 1) * frame + half + i * picSize[0]: (i + 1) * frame + (i + 1) * picSize[0] + half,
             (j + 1) * frame + j * picSize[1]: (j + 1) * frame + (j + 1) * picSize[1]] = picCounter
