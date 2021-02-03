@@ -71,13 +71,13 @@ def make_figure(name):
     plotscript = get_plotscript(name)
 
     try:
-        gs_main = plotscript.get_gridspec
+        gs_main = plotscript.get_gridspec()
     except AttributeError:
         log.error("Work on %s hasn't even started yet, sheesh!", name)
         return
 
     try:
-        fig_kwargs = plotscript.get_fig_kwargs
+        fig_kwargs = plotscript.get_fig_kwargs()
     except AttributeError:
         fig_kwargs = {}
 
@@ -89,10 +89,10 @@ def make_figure(name):
     except AttributeError:
         pass
 
-    for k, axes in axes.items():
+    for k, axis in axes.items():
         log.info("Plotting subfigure: %s", k)
         try:
-            getattr(plotscript, "plot_{}".format(k))(axes)
+            getattr(plotscript, "plot_{}".format(k))(axis)
         except AttributeError:
             log.warning("Plotscript missing for subplot <%s> in figure <%s>!", k, name)
 

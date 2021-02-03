@@ -14,7 +14,7 @@ import numpy as np
 from matplotlib.ticker import MaxNLocator
 from matplotlib import cm
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-from mpl_toolkits.axes_grid1.colorbar import colorbar
+from matplotlib import colorbar
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from skimage.transform import resize
 
