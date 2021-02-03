@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+"""making plotting of multipanel plots easier with dedicated gridspec use"""
 
 from setuptools import setup, find_packages
 
-version = "0.1.0"
+VERSION = "0.1.0"
 
 setup(name='Gridspeccer',
-      version=version,
+      version=VERSION,
       description='Helper scripts to organize multi-figure plots.',
       author='Oliver Breitwieser',
       author_email='oliver.breitwieser@kip.uni-heidelberg.de',

@@ -5,115 +5,121 @@
     Core utils for all figures.
 """
 
-import itertools as it
-import numpy as np
+import importlib
+import logging
 import os
 import os.path as osp
-import pylab as p
 import string
 import sys
+import numpy as np
+import pylab as p
 
 np.random.seed(424242)
 
 
 def make_log(name):
-    import logging
-    import os
-    log = logging.Logger(name)
+    "create logger"
+    tmp_log = logging.Logger(name)
     if "DEBUG" in os.environ:
         log_level = logging.DEBUG
         log_formatter = logging.Formatter("%(asctime)s %(levelname)s: "
-            "%(message)s", datefmt="%y-%m-%d %H:%M:%S")
+                                          "%(message)s", datefmt="%y-%m-%d %H:%M:%S")
     else:
         log_level = logging.INFO
         log_formatter = logging.Formatter("%(asctime)s %(levelname)s: "
-            "%(message)s", datefmt="%y-%m-%d %H:%M:%S")
+                                          "%(message)s", datefmt="%y-%m-%d %H:%M:%S")
     log_handler = logging.StreamHandler()
     log_handler.setFormatter(log_formatter)
-    log.addHandler(log_handler)
-    log.setLevel(log_level)
-    return log
+    tmp_log.addHandler(log_handler)
+    tmp_log.setLevel(log_level)
+    return tmp_log
+
+
 log = make_log("gridspeccer")
 
 # in order to have consistent coloring, please have all colors be defined here
 label_to_color = {
     # preliminary:
-    "sw" : "k",
-    "sw+hw" : "m", #"r",
-    "hw_all" : "g",
-    "hw_single" : "b",
+    "sw": "k",
+    "sw+hw": "m",  # "r",
+    "hw_all": "g",
+    "hw_single": "b",
 }
 
 layer_to_color = {
-    "hidden" : "orange",
-    "label" : "blue",
-    "bad" : "red",
+    "hidden": "orange",
+    "label": "blue",
+    "bad": "red",
 }
-layer_alpha = 0.75
 
 dataset_to_color = {
-    "train" : "g",
-    "test" : "b",
-    "train_theo" : "darkgreen",
-    "test_theo" : "#062A78",
-    #  "hw_mean" : "deepskyblue", 
-    #  "hw_span" : "aqua",
-    "hw_mean" :  "#A67B5B",
-    "hw_span" : "wheat",
+    "train": "g",
+    "test": "b",
+    "train_theo": "darkgreen",
+    "test_theo": "#062A78",
+    #  "hw_mean": "deepskyblue",
+    #  "hw_span": "aqua",
+    "hw_mean": "#A67B5B",
+    "hw_span": "wheat",
 }
 
+
 def make_figure(name):
-    log.info("--- Creating figure: {} ---".format(name))
+    "start making the figure"
+    log.info("--- Creating figure: %s ---", name)
 
     plotscript = get_plotscript(name)
 
-    class FigureNotDone(Exception):
-        pass
-
-    def throw_figure_not_done():
-        raise FigureNotDone
-
     try:
-        gs = getattr(plotscript, "get_gridspec",
-                lambda: throw_figure_not_done())()
-    except FigureNotDone:
-        log.error("Work on {} hasn't even started yet, sheesh!".format(name))
+        gs_main = plotscript.get_gridspec
+    except AttributeError:
+        log.error("Work on %s hasn't even started yet, sheesh!", name)
         return
 
-    fig_kwargs = getattr(plotscript, "get_fig_kwargs", lambda: {})()
+    try:
+        fig_kwargs = plotscript.get_fig_kwargs
+    except AttributeError:
+        fig_kwargs = {}
 
-    fig, axes = make_axes(gs, fig_kwargs=fig_kwargs)
+    fig, axes = make_axes(gs_main, fig_kwargs=fig_kwargs)
 
     # call possible axes adjustment script for figure
-    getattr(plotscript, "adjust_axes", lambda axes: None)(axes)
+    try:
+        plotscript.adjust_axes(axes)
+    except AttributeError:
+        pass
 
-    for k, ax in axes.items():
-        log.info("Plotting subfigure: {}".format(k))
-        getattr(plotscript, "plot_{}".format(k), lambda ax: log.warn(
-            "Plotscript missing for subplot <{}> in figure <{}>!"
-            "".format(k, name)))(ax)
+    for k, axes in axes.items():
+        log.info("Plotting subfigure: %s", k)
+        try:
+            getattr(plotscript, "plot_{}".format(k))(axes)
+        except AttributeError:
+            log.warning("Plotscript missing for subplot <%s> in figure <%s>!", k, name)
 
     log.info("Plotting labels…")
-    getattr(plotscript, "plot_labels", lambda axes: log.warn(
-        "Not plotting labels for figure {}".format(name)))(axes)
+    try:
+        getattr(plotscript, "plot_labels")(axes)
+    except AttributeError:
+        log.warning("Not plotting labels for figure %s", name)
 
     save_figure(fig, name)
     p.close(fig)
 
 
 def get_plotscript(name):
+    "get the script that details the plot"
     try:
         sys.path.append(os.getcwd())
-        import importlib
         plotscript = importlib.import_module(name)
     except ImportError:
-        log.error("Plotscript for figure {} not found!".format(name))
+        log.error("Plotscript for figure %s not found!", name)
         raise
     sys.path.pop(-1)
     return plotscript
 
 
 def save_figure(fig, name):
+    "save figure"
     if not osp.isdir(osp.join("..", "fig")):
         os.makedirs(osp.join("..", "fig"))
     fig.savefig(osp.join("..", "fig", f"{name}.pdf"))
@@ -129,87 +135,105 @@ def make_axes(gridspec, fig_kwargs=None):
     fig = p.figure(**fig_kwargs)
     axes = {}
 
-    for k, gs in gridspec.items():
+    for k, gs_item in gridspec.items():
         # we just add a label to make sure all axes are actually created
-        log.debug("Creating subplot: {}".format(k))
-        axes[k] = fig.add_subplot(gs, label=k)
+        log.debug("Creating subplot: %s", k)
+        axes[k] = fig.add_subplot(gs_item, label=k)
 
     return fig, axes
 
 
 def get_data(filename):
+    "get data (probably deprecated)"
     return np.load(osp.join("..", "data", filename))
 
+
 def plot_labels(axes, labels_to_plot, xpos_default=.04, ypos_default=.90,
-        label_xpos={}, label_ypos={}, label_color={}, fontdict={}):
+                label_xpos=None, label_ypos=None, label_color=None, fontdict=None):
+    "plot labels"
+    label_xpos = label_xpos if label_xpos is not None else {}
+    label_ypos = label_ypos if label_ypos is not None else {}
+    label_color = label_color if label_color is not None else {}
 
-    for l, c in zip((l for l in labels_to_plot),
-            string.ascii_lowercase):
-        log.info("Subplot {0} receives label {1}".format( l, c ))
-        c = c
-        plot_caption(axes[l], "\\textbf{" + c + "}",
-                label_xpos.get(l, xpos_default),
-                label_ypos.get(l, ypos_default), label_color.get(l, "k"),
-                fontdict=fontdict)
+    for label_idx, char in zip(labels_to_plot,
+                               string.ascii_lowercase):
+        log.info("Subplot %s receives label %s", label_idx, char)
+        plot_caption(axes[label_idx], "\\textbf{" + char + "}",
+                     label_xpos.get(label_idx, xpos_default),
+                     label_ypos.get(label_idx, ypos_default), label_color.get(label_idx, "k"),
+                     fontdict=fontdict)
 
-def plot_caption(ax, caption, xpos=.04, ypos=.88, color="k", fontdict={}):
+
+def plot_caption(axis, caption, xpos=.04, ypos=.88, color="k", fontdict=None):
+    "plot caption"
     # find out how our caption will look in reality
-    caption_args={
-            "ha" : "left", "va" : "bottom",
-            #"weight" : "bold",
-            "style" : "normal",
-            "size" : 16,
-            "color": color,
-            "zorder" : 1000,
-        }
-    # r = get_renderer(ax.figure)
+    caption_args = {
+        "ha": "left",
+        "va": "bottom",
+        # "weight": "bold",
+        "style": "normal",
+        "size": 16,
+        "color": color,
+        "zorder": 1000,
+    }
+    # r = get_renderer(axis.figure)
     # bb = t.get_window_extent(renderer=r)
 
     # if fontdict is None:
-        # fontdict = {"family": "Linux Biolinum Kb"}
-        # size = caption_args["size"]
-        # bbox = mpatches.FancyBboxPatch(ax.transAxes.transform((xpos, ypos)),
-                # size *1.0, size*1.0, zorder=10,
-                # edgecolor="k", facecolor="r", boxstyle="round")
-        # ax.patches.append(bbox)
+    #     fontdict = {"family": "Linux Biolinum Kb"}
+    #     size = caption_args["size"]
+    #     bbox = mpatches.FancyBboxPatch(axis.transAxes.transform((xpos, ypos)),
+    #             size *1.0, size*1.0, zorder=10,
+    #             edgecolor="k", facecolor="r", boxstyle="round")
+    #     axis.patches.append(bbox)
 
-    t = ax.text(xpos, ypos, caption, fontdict=fontdict, transform=ax.transAxes,
-            **caption_args )
-
-def hide_axis(ax):
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-def show_axis(ax):
-    ax.get_xaxis().set_visible(True)
-    ax.get_yaxis().set_visible(True)
-
-def hide_ticks(ax, axis='both', minormajor='both'):
-    ax.tick_params(axis=axis, which=minormajor,length=0)
-
-def make_spines(ax):
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
-
-def make_arrow(ax, pos_from, pos_to, color="r", arrowstyle="<|-|>",
-        shrinkA=0., shrinkB=0., transform="data"):
-    ax.annotate("", xy=pos_to, xytext=pos_from,
-            xycoords=transform, textcoords=transform,
-            arrowprops=dict(arrowstyle=arrowstyle, color=color,
-                shrinkA=shrinkA, shrinkB=shrinkB))
-
-def make_arrow_lines(ax, xpos, xlength, ypos, color="r", arrowstyle="<|-|>",
-        line_alpha=0.75, text_ypos_adjustment=0., text_va="center", text=""):
-
-    make_arrow(ax, (xpos, ypos), (xpos+xlength, ypos), color=color, arrowstyle=arrowstyle)
-
-    ax.text(xpos+xlength/2., ypos - text_ypos_adjustment, text,
-            va=text_va, color="r", ha="center")
-
-    ax.axvline(x=xpos, ls="-", alpha=line_alpha, color=color)
-    ax.axvline(x=xpos+xlength, ls="-", alpha=line_alpha, color=color)
+    axis.text(xpos, ypos, caption, fontdict=fontdict, transform=axis.transAxes,
+              **caption_args)
 
 
+def hide_axis(axis):
+    "hide axis"
+    axis.get_xaxis().set_visible(False)
+    axis.get_yaxis().set_visible(False)
+
+
+def show_axis(axis):
+    "show axis"
+    axis.get_xaxis().set_visible(True)
+    axis.get_yaxis().set_visible(True)
+
+
+def hide_ticks(axis, axes='both', minormajor='both'):
+    "hide ticks"
+    axis.tick_params(axis=axes, which=minormajor, length=0)
+
+
+def make_spines(axis):
+    "draw spines"
+    axis.spines['top'].set_visible(False)
+    axis.spines['right'].set_visible(False)
+
+    axis.get_xaxis().tick_bottom()
+    axis.get_yaxis().tick_left()
+
+
+def make_arrow(axis, pos_from, pos_to, color="r", arrowstyle="<|-|>",
+               shrink_a=0., shrink_b=0., transform="data"):
+    "make an arrow"
+    axis.annotate("", xy=pos_to, xytext=pos_from,
+                  xycoords=transform, textcoords=transform,
+                  arrowprops=dict(arrowstyle=arrowstyle, color=color,
+                                  shrinkA=shrink_a, shrinkB=shrink_b))
+
+
+def make_arrow_lines(axis, xpos, xlength, ypos, color="r", arrowstyle="<|-|>",
+                     line_alpha=0.75, text_ypos_adjustment=0., text_va="center", text=""):
+    "make line of arrow"
+
+    make_arrow(axis, (xpos, ypos), (xpos + xlength, ypos), color=color, arrowstyle=arrowstyle)
+
+    axis.text(xpos + xlength / 2., ypos - text_ypos_adjustment, text,
+              va=text_va, color="r", ha="center")
+
+    axis.axvline(x=xpos, ls="-", alpha=line_alpha, color=color)
+    axis.axvline(x=xpos + xlength, ls="-", alpha=line_alpha, color=color)

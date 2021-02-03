@@ -1,12 +1,13 @@
 #!/usr/bin/env python2
 # encoding: utf-8
+"""CLI interface to the gridspeccer"""
 
 import argparse
 import glob
-import matplotlib as mpl
 import os
 import os.path as osp
 import sys
+import matplotlib as mpl
 
 sys.path.insert(0, osp.dirname(osp.abspath(__file__)))
 
@@ -15,6 +16,7 @@ from .core import log
 
 
 def plot():
+    """plot a figure"""
     parser = argparse.ArgumentParser(prog='gridspeccer',
                                      description='Plotting tool for easier poisitioning.')
     parser.add_argument('--mplrc', help='Location of a matplotlibrc to be used.',
@@ -38,37 +40,37 @@ def plot():
         else:
             raise IOError(f"all data given have to be folder or files that exist, '{fname}' does not")
 
-    mainWD = os.getcwd()
+    main_wd = os.getcwd()
     for name in plotscripts:
-        log.info(f"-- processing file {name} --")
+        log.info("-- processing file %s --", name)
         # always get back to main working directory
-        os.chdir(mainWD)
+        os.chdir(main_wd)
         if osp.dirname(name) != "":
             os.chdir(osp.dirname(name))
         core.make_figure(osp.splitext(osp.basename(name))[0])
 
 
 if __name__ == "__main__":
-    import sys
     from inspect import isfunction, getargspec
     local_globals = list(globals().keys())
 
-    def is_noarg_function(f):
+    def is_noarg_function(fun):
         "Test if f is valid function and has no arguments"
-        func = globals()[f]
+        func = globals()[fun]
         if isfunction(func):
             argspec = getargspec(func)
             if len(argspec.args) == 0\
-                        and argspec.varargs is None\
-                        and argspec.keywords is None:
+               and argspec.varargs is None\
+               and argspec.keywords is None:
                 return True
         return False
 
     def show_functions():
+        "show all functions"
         functions.sort()
-        for f in functions:
-            print(f)
-    functions = [f for f in local_globals if is_noarg_function(f)]
+        for fun in functions:
+            print(fun)
+    functions = [fun for fun in local_globals if is_noarg_function(fun)]
     if len(sys.argv) <= 1 or sys.argv[1] == "-h":
         show_functions()
     else:
