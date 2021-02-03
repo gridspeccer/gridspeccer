@@ -41,7 +41,7 @@ jobs:
         run: |
           python3 -m pip install pylint
       - name: pylint
-        run: pylint * --ignore=old_examples --max-line-length=120
+        run: pylint */ *.py --ignore=old_examples --max-line-length=120
   flake8:
     name: lint with flake8
     runs-on: ubuntu-latest
