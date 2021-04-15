@@ -9,6 +9,8 @@ import os.path as osp
 import sys
 import matplotlib as mpl
 
+from pathlib import Path
+
 sys.path.insert(0, osp.dirname(osp.abspath(__file__)))
 
 from . import core
@@ -21,6 +23,7 @@ def plot():
                                      description='Plotting tool for easier poisitioning.')
     parser.add_argument('--mplrc', help='Location of a matplotlibrc to be used.',
                         default=osp.join(osp.dirname(osp.abspath(__file__)), "defaults", "matplotlibrc"))
+    parser.add_argument('--output-folder', help='Folder to output into.', type=str, default="../fig")
     parser.add_argument('data', nargs='*', help='files to look at and folders to look through for fig*.py files')
     args = parser.parse_args()
     if not osp.isfile(args.mplrc):
@@ -47,7 +50,7 @@ def plot():
         os.chdir(main_wd)
         if osp.dirname(name) != "":
             os.chdir(osp.dirname(name))
-        core.make_figure(osp.splitext(osp.basename(name))[0])
+        core.make_figure(osp.splitext(osp.basename(name))[0], folder=Path(args.output_folder))
 
 
 if __name__ == "__main__":

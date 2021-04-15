@@ -14,6 +14,8 @@ import sys
 import numpy as np
 import pylab as p
 
+from pathlib import Path
+
 np.random.seed(424242)
 
 
@@ -64,7 +66,7 @@ dataset_to_color = {
 }
 
 
-def make_figure(name):
+def make_figure(name, folder=Path("../fig")):
     "start making the figure"
     log.info("--- Creating figure: %s ---", name)
 
@@ -102,7 +104,7 @@ def make_figure(name):
     except AttributeError:
         log.warning("Not plotting labels for figure %s", name)
 
-    save_figure(fig, name)
+    save_figure(fig, folder / name)
     p.close(fig)
 
 
@@ -118,11 +120,17 @@ def get_plotscript(name):
     return plotscript
 
 
+def ensure_folder_exists(folder):
+    folder = Path(folder)
+    if not folder.is_dir():
+        folder.mkdir(parents=True)
+
+
 def save_figure(fig, name):
     "save figure"
-    if not osp.isdir(osp.join("..", "fig")):
-        os.makedirs(osp.join("..", "fig"))
-    fig.savefig(osp.join("..", "fig", f"{name}.pdf"))
+    name = Path(name)
+    ensure_folder_exists(name.parent)
+    fig.savefig(name.with_suffix(".pdf"))
 
 
 def make_axes(gridspec, fig_kwargs=None):
