@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # encoding: utf-8
 """Example script for a plot using the gridspeccer module.
 
@@ -53,7 +53,7 @@ def adjust_axes(axes):
     """
         Settings for all plots.
     """
-    for axis in axes.values():
+    for axis in list(axes.values()):
         core.hide_axis(axis)
 
     for k in [
@@ -106,7 +106,7 @@ EXAMPLECLASS = 1
 def plot_arch(axis):
     """done with tex"""
     log.info("the architecture is done with 'tex' for %s", axis)
-    print(aux.cm_gray_r)  # access aux once
+    print((aux.cm_gray_r))  # access aux once
 
 
 def plot_coding(axis):

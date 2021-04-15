@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # encoding: utf-8
 
 """
@@ -89,7 +89,7 @@ def make_figure(name):
     except AttributeError:
         pass
 
-    for k, axis in axes.items():
+    for k, axis in list(axes.items()):
         log.info("Plotting subfigure: %s", k)
         try:
             getattr(plotscript, "plot_{}".format(k))(axis)
@@ -135,7 +135,7 @@ def make_axes(gridspec, fig_kwargs=None):
     fig = p.figure(**fig_kwargs)
     axes = {}
 
-    for k, gs_item in gridspec.items():
+    for k, gs_item in list(gridspec.items()):
         # we just add a label to make sure all axes are actually created
         log.debug("Creating subplot: %s", k)
         axes[k] = fig.add_subplot(gs_item, label=k)

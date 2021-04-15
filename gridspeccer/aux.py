@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # encoding: utf-8
 """
 This file gathers the auxilliary functions which are repeated over several images

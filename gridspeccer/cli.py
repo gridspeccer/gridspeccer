@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # encoding: utf-8
 """CLI interface to the gridspeccer"""
 
@@ -79,5 +79,5 @@ if __name__ == "__main__":
                 run = globals()[launch]
                 run()
             else:
-                print(launch, "not part of functions:")
+                print((launch, "not part of functions:"))
                 show_functions()
