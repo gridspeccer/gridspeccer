@@ -2,6 +2,8 @@
 # encoding: utf-8
 """CLI interface to the gridspeccer"""
 
+from . import core
+from .core import log
 import argparse
 import glob
 import os
@@ -13,26 +15,41 @@ from pathlib import Path
 
 sys.path.insert(0, osp.dirname(osp.abspath(__file__)))
 
-from . import core
-from .core import log
-
 
 def plot():
     """plot a figure"""
-    parser = argparse.ArgumentParser(prog='gridspeccer',
-                                     description='Plotting tool for easier poisitioning.')
-    parser.add_argument('--mplrc', help='Location of a matplotlibrc to be used.',
-                        default=osp.join(osp.dirname(osp.abspath(__file__)), "defaults", "matplotlibrc"))
-    parser.add_argument('--output-folder', help='Folder to output into.', type=str, default="../fig")
-    parser.add_argument('data', nargs='*', help='files to look at and folders to look through for fig*.py files')
+    parser = argparse.ArgumentParser(
+        prog="gridspeccer",
+        description="Plotting tool for easier poisitioning.",
+    )
+    parser.add_argument(
+        "--mplrc",
+        help="Location of a matplotlibrc to be used.",
+        default=osp.join(
+            osp.dirname(osp.abspath(__file__)), "defaults", "matplotlibrc"
+        ),
+    )
+    parser.add_argument(
+        "--output-folder",
+        help="Folder to output into.",
+        type=str,
+        default="../fig",
+    )
+    parser.add_argument(
+        "data",
+        nargs="*",
+        help="files to look at and folders to look through for fig*.py files",
+    )
     args = parser.parse_args()
     if not osp.isfile(args.mplrc):
-        raise IOError(f"The 'mplrc' argument ('{args.mplrc}') has to be an existing file")
+        raise IOError(
+            f"The 'mplrc' argument ('{args.mplrc}') has to be an existing file"
+        )
     mpl.rc_file(args.mplrc)
 
     if len(args.data) == 0:
         print("no data given, looking for all fig*.py files in the working directory")
-        args.data = ['.']
+        args.data = ["."]
 
     plotscripts = []
     for fname in args.data:
@@ -41,7 +58,9 @@ def plot():
         elif osp.isfile(fname):
             plotscripts.append(fname)
         else:
-            raise IOError(f"all data given have to be folder or files that exist, '{fname}' does not")
+            raise IOError(
+                f"all data given have to be folder or files that exist, '{fname}' does not"
+            )
 
     main_wd = os.getcwd()
     for name in plotscripts:
@@ -50,11 +69,15 @@ def plot():
         os.chdir(main_wd)
         if osp.dirname(name) != "":
             os.chdir(osp.dirname(name))
-        core.make_figure(osp.splitext(osp.basename(name))[0], folder=Path(args.output_folder))
+        core.make_figure(
+            osp.splitext(osp.basename(name))[0],
+            folder=Path(args.output_folder),
+        )
 
 
 if __name__ == "__main__":
     from inspect import isfunction, getargspec
+
     local_globals = list(globals().keys())
 
     def is_noarg_function(fun):
@@ -62,9 +85,11 @@ if __name__ == "__main__":
         func = globals()[fun]
         if isfunction(func):
             argspec = getargspec(func)
-            if len(argspec.args) == 0\
-               and argspec.varargs is None\
-               and argspec.keywords is None:
+            if (
+                len(argspec.args) == 0
+                and argspec.varargs is None
+                and argspec.keywords is None
+            ):
                 return True
         return False
 
@@ -73,6 +98,7 @@ if __name__ == "__main__":
         functions.sort()
         for fun in functions:
             print(fun)
+
     functions = [fun for fun in local_globals if is_noarg_function(fun)]
     if len(sys.argv) <= 1 or sys.argv[1] == "-h":
         show_functions()

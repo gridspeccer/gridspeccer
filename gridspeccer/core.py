@@ -24,12 +24,14 @@ def make_log(name):
     tmp_log = logging.Logger(name)
     if "DEBUG" in os.environ:
         log_level = logging.DEBUG
-        log_formatter = logging.Formatter("%(asctime)s %(levelname)s: "
-                                          "%(message)s", datefmt="%y-%m-%d %H:%M:%S")
+        log_formatter = logging.Formatter(
+            "%(asctime)s %(levelname)s: " "%(message)s", datefmt="%y-%m-%d %H:%M:%S"
+        )
     else:
         log_level = logging.INFO
-        log_formatter = logging.Formatter("%(asctime)s %(levelname)s: "
-                                          "%(message)s", datefmt="%y-%m-%d %H:%M:%S")
+        log_formatter = logging.Formatter(
+            "%(asctime)s %(levelname)s: " "%(message)s", datefmt="%y-%m-%d %H:%M:%S"
+        )
     log_handler = logging.StreamHandler()
     log_handler.setFormatter(log_formatter)
     tmp_log.addHandler(log_handler)
@@ -135,7 +137,7 @@ def save_figure(fig, name):
 
 def make_axes(gridspec, fig_kwargs=None):
     """
-        Turn gridspec information into plots.
+    Turn gridspec information into plots.
     """
     if fig_kwargs is None:
         fig_kwargs = {}
@@ -156,23 +158,34 @@ def get_data(filename):
     return np.load(osp.join("..", "data", filename))
 
 
-def plot_labels(axes, labels_to_plot, xpos_default=.04, ypos_default=.90,
-                label_xpos=None, label_ypos=None, label_color=None, fontdict=None):
+def plot_labels(
+    axes,
+    labels_to_plot,
+    xpos_default=0.04,
+    ypos_default=0.90,
+    label_xpos=None,
+    label_ypos=None,
+    label_color=None,
+    fontdict=None,
+):
     "plot labels"
     label_xpos = label_xpos if label_xpos is not None else {}
     label_ypos = label_ypos if label_ypos is not None else {}
     label_color = label_color if label_color is not None else {}
 
-    for label_idx, char in zip(labels_to_plot,
-                               string.ascii_lowercase):
+    for label_idx, char in zip(labels_to_plot, string.ascii_lowercase):
         log.info("Subplot %s receives label %s", label_idx, char)
-        plot_caption(axes[label_idx], "\\textbf{" + char + "}",
-                     label_xpos.get(label_idx, xpos_default),
-                     label_ypos.get(label_idx, ypos_default), label_color.get(label_idx, "k"),
-                     fontdict=fontdict)
+        plot_caption(
+            axes[label_idx],
+            "\\textbf{" + char + "}",
+            label_xpos.get(label_idx, xpos_default),
+            label_ypos.get(label_idx, ypos_default),
+            label_color.get(label_idx, "k"),
+            fontdict=fontdict,
+        )
 
 
-def plot_caption(axis, caption, xpos=.04, ypos=.88, color="k", fontdict=None):
+def plot_caption(axis, caption, xpos=0.04, ypos=0.88, color="k", fontdict=None):
     "plot caption"
     # find out how our caption will look in reality
     caption_args = {
@@ -195,8 +208,9 @@ def plot_caption(axis, caption, xpos=.04, ypos=.88, color="k", fontdict=None):
     #             edgecolor="k", facecolor="r", boxstyle="round")
     #     axis.patches.append(bbox)
 
-    axis.text(xpos, ypos, caption, fontdict=fontdict, transform=axis.transAxes,
-              **caption_args)
+    axis.text(
+        xpos, ypos, caption, fontdict=fontdict, transform=axis.transAxes, **caption_args
+    )
 
 
 def hide_axis(axis):
@@ -211,37 +225,69 @@ def show_axis(axis):
     axis.get_yaxis().set_visible(True)
 
 
-def hide_ticks(axis, axes='both', minormajor='both'):
+def hide_ticks(axis, axes="both", minormajor="both"):
     "hide ticks"
     axis.tick_params(axis=axes, which=minormajor, length=0)
 
 
 def make_spines(axis):
     "draw spines"
-    axis.spines['top'].set_visible(False)
-    axis.spines['right'].set_visible(False)
+    axis.spines["top"].set_visible(False)
+    axis.spines["right"].set_visible(False)
 
     axis.get_xaxis().tick_bottom()
     axis.get_yaxis().tick_left()
 
 
-def make_arrow(axis, pos_from, pos_to, color="r", arrowstyle="<|-|>",
-               shrink_a=0., shrink_b=0., transform="data"):
+def make_arrow(
+    axis,
+    pos_from,
+    pos_to,
+    color="r",
+    arrowstyle="<|-|>",
+    shrink_a=0.0,
+    shrink_b=0.0,
+    transform="data",
+):
     "make an arrow"
-    axis.annotate("", xy=pos_to, xytext=pos_from,
-                  xycoords=transform, textcoords=transform,
-                  arrowprops=dict(arrowstyle=arrowstyle, color=color,
-                                  shrinkA=shrink_a, shrinkB=shrink_b))
+    axis.annotate(
+        "",
+        xy=pos_to,
+        xytext=pos_from,
+        xycoords=transform,
+        textcoords=transform,
+        arrowprops=dict(
+            arrowstyle=arrowstyle, color=color, shrinkA=shrink_a, shrinkB=shrink_b
+        ),
+    )
 
 
-def make_arrow_lines(axis, xpos, xlength, ypos, color="r", arrowstyle="<|-|>",
-                     line_alpha=0.75, text_ypos_adjustment=0., text_va="center", text=""):
+def make_arrow_lines(
+    axis,
+    xpos,
+    xlength,
+    ypos,
+    color="r",
+    arrowstyle="<|-|>",
+    line_alpha=0.75,
+    text_ypos_adjustment=0.0,
+    text_va="center",
+    text="",
+):
     "make line of arrow"
 
-    make_arrow(axis, (xpos, ypos), (xpos + xlength, ypos), color=color, arrowstyle=arrowstyle)
+    make_arrow(
+        axis, (xpos, ypos), (xpos + xlength, ypos), color=color, arrowstyle=arrowstyle
+    )
 
-    axis.text(xpos + xlength / 2., ypos - text_ypos_adjustment, text,
-              va=text_va, color="r", ha="center")
+    axis.text(
+        xpos + xlength / 2.0,
+        ypos - text_ypos_adjustment,
+        text,
+        va=text_va,
+        color="r",
+        ha="center",
+    )
 
     axis.axvline(x=xpos, ls="-", alpha=line_alpha, color=color)
     axis.axvline(x=xpos + xlength, ls="-", alpha=line_alpha, color=color)
