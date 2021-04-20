@@ -231,6 +231,19 @@ def hide_ticks(axis, axes="both", minormajor="both"):
     axis.tick_params(axis=axes, which=minormajor, length=0)
 
 
+def make_spines_all(ax):
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+
+
+def make_spines_right(ax):
+    ax.spines['left'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_right()
+
+
 def make_spines(axis):
     "draw spines"
     axis.spines["top"].set_visible(False)
