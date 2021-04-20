@@ -88,10 +88,7 @@ def make_figure(name, folder=Path("../fig")):
     fig, axes = make_axes(gs_main, fig_kwargs=fig_kwargs)
 
     # call possible axes adjustment script for figure
-    try:
-        plotscript.adjust_axes(axes)
-    except AttributeError:
-        pass
+    getattr(plotscript, "adjust_axes", lambda x: log.info("No adjust_axes() defines"))(axes)
 
     for k, axis in list(axes.items()):
         log.info("Plotting subfigure: %s", k)
