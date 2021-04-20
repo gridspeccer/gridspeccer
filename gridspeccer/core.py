@@ -95,10 +95,11 @@ def make_figure(name, folder=Path("../fig")):
 
     for k, axis in list(axes.items()):
         log.info("Plotting subfigure: %s", k)
-        try:
-            getattr(plotscript, "plot_{}".format(k))(axis)
-        except AttributeError:
+        plot_function = getattr(plotscript, "plot_{}".format(k), None)
+        if plot_function is None:
             log.warning("Plotscript missing for subplot <%s> in figure <%s>!", k, name)
+        else:
+            plot_function(axis)
 
     log.info("Plotting labels…")
     try:
