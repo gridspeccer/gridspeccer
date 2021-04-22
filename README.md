@@ -20,6 +20,11 @@ A standalone plot file that does not need data is `examples`, this is also used 
 
 Many old examples that are not executable at the moment can be found in `old_examples`, to serve as inspiration for other plots.
 
+### Requirements
+
+* Python 3
+* matplotlib
+* LaTeX
 
 ### Notes
 [1] Don't install using `python setup.py install`, as this will create an `.egg`, and the default `matplotlibrc`s will not be accessible.
