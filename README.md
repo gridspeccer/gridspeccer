@@ -1,5 +1,7 @@
 # gridspeccer
 
+*NOTE:* We are currently in the process of transitioning from a "just include the complete script in every paper repository" to a standalone codebase that is not stable yet.
+
 Plotting tool to make plotting with many subfigures easier, especially for publications. 
 After installation with `pip install . --local`[1] the `gridspeccer` can be used from the command line on plot scripts:
 ```
