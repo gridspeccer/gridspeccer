@@ -68,7 +68,7 @@ dataset_to_color = {
 }
 
 
-def make_figure(name, folder=Path("../fig")):
+def make_figure(name, folder=Path("../fig"), filetype=".pdf"):
     "start making the figure"
     log.info("--- Creating figure: %s ---", name)
 
@@ -83,6 +83,7 @@ def make_figure(name, folder=Path("../fig")):
     try:
         fig_kwargs = plotscript.get_fig_kwargs()
     except AttributeError:
+        log.warning("get_fig_kwargs script missing for figure <%s>!", name)
         fig_kwargs = {}
 
     fig, axes = make_axes(gs_main, fig_kwargs=fig_kwargs)
@@ -104,7 +105,7 @@ def make_figure(name, folder=Path("../fig")):
     except AttributeError:
         log.warning("Not plotting labels for figure %s", name)
 
-    save_figure(fig, folder / name)
+    save_figure(fig, folder / name, filetype)
     p.close(fig)
 
 
@@ -126,11 +127,11 @@ def ensure_folder_exists(folder):
         folder.mkdir(parents=True)
 
 
-def save_figure(fig, name):
+def save_figure(fig, name, filetype=".pdf"):
     "save figure"
     name = Path(name)
     ensure_folder_exists(name.parent)
-    fig.savefig(name.with_suffix(".pdf"))
+    fig.savefig(name.with_suffix(filetype))
 
 
 def make_axes(gridspec, fig_kwargs=None):

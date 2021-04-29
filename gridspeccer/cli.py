@@ -23,6 +23,11 @@ def plot():
         description="Plotting tool for easier poisitioning.",
     )
     parser.add_argument(
+        "--ft",
+        help="Filetype suffix for saving, for supported types check matplotlib but certainly .pdf and .png.",
+        default=".pdf",
+    )
+    parser.add_argument(
         "--mplrc",
         help="Location of a matplotlibrc to be used.",
         default=osp.join(
@@ -72,6 +77,7 @@ def plot():
         core.make_figure(
             osp.splitext(osp.basename(name))[0],
             folder=Path(args.output_folder),
+            filetype=args.ft)
         )
 
 
