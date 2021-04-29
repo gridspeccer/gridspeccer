@@ -7,6 +7,8 @@
 
 import importlib
 import logging
+import matplotlib as mpl
+from matplotlib import gridspec as gs
 import os
 import os.path as osp
 import string
@@ -146,7 +148,12 @@ def make_axes(gridspec, fig_kwargs=None):
     for k, gs_item in list(gridspec.items()):
         # we just add a label to make sure all axes are actually created
         log.debug("Creating subplot: %s", k)
-        axes[k] = fig.add_subplot(gs_item, label=k)
+        if isinstance(gs_item, gs.SubplotSpec):
+            axes[k] = fig.add_subplot(gs_item, label=k)
+        else:
+            # assume a tuple is given, and the second part are options
+            if '3d' in gs_item[1]:
+                axes[k] = fig.add_subplot(gs_item[0], label=k, projection='3d')
 
     return fig, axes
 
@@ -161,14 +168,17 @@ def plot_labels(
     labels_to_plot,
     xpos_default=0.04,
     ypos_default=0.90,
+    zpos_default=0.00,
     label_xpos=None,
     label_ypos=None,
+    label_zpos=None,
     label_color=None,
     fontdict=None,
 ):
     "plot labels"
     label_xpos = label_xpos if label_xpos is not None else {}
     label_ypos = label_ypos if label_ypos is not None else {}
+    label_zpos = label_zpos if label_zpos is not None else {}
     label_color = label_color if label_color is not None else {}
 
     for label_idx, char in zip(labels_to_plot, string.ascii_lowercase):
@@ -176,14 +186,15 @@ def plot_labels(
         plot_caption(
             axes[label_idx],
             "\\textbf{" + char + "}",
-            label_xpos.get(label_idx, xpos_default),
-            label_ypos.get(label_idx, ypos_default),
-            label_color.get(label_idx, "k"),
+            xpos=label_xpos.get(label_idx, xpos_default),
+            ypos=label_ypos.get(label_idx, ypos_default),
+            zpos=label_zpos.get(label_idx, zpos_default),
+            color=label_color.get(label_idx, "k"),
             fontdict=fontdict,
         )
 
 
-def plot_caption(axis, caption, xpos=0.04, ypos=0.88, color="k", fontdict=None):
+def plot_caption(axis, caption, xpos=0.04, ypos=0.88, zpos=0.0, color="k", fontdict=None):
     "plot caption"
     # find out how our caption will look in reality
     caption_args = {
@@ -206,9 +217,15 @@ def plot_caption(axis, caption, xpos=0.04, ypos=0.88, color="k", fontdict=None):
     #             edgecolor="k", facecolor="r", boxstyle="round")
     #     axis.patches.append(bbox)
 
-    axis.text(
-        xpos, ypos, caption, fontdict=fontdict, transform=axis.transAxes, **caption_args
-    )
+    if 'zaxis' not in axis.properties():
+        # not a 3d projection
+        axis.text(
+            xpos, ypos, caption, fontdict=fontdict, transform=axis.transAxes, **caption_args,
+        )
+    else:
+        axis.text(
+            xpos, ypos, zpos, caption, fontdict=fontdict, transform=axis.transAxes, **caption_args,
+        )
 
 
 def hide_axis(axis):
