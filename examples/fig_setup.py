@@ -38,7 +38,7 @@ def get_gridspec():
 
     return {
         # ### schematics
-        "arch": gs_tikz[0, 0],
+        "arch": (gs_tikz[0, 0], {'3d': True}),
 
         "coding": gs_tikz[0, 1],
 
@@ -72,11 +72,15 @@ def plot_labels(axes):
                          "coding",
                      ],
                      label_ypos={
-                         "arch": 0.87,
+                         "arch": 0.0,
                          "coding": 0.87,
                          "psp_shapes": 0.95,
                      },
                      label_xpos={
+                         "arch": 0.0,
+                     },
+                     label_zpos={
+                         "arch": 7.5,
                      },
                      )
 
