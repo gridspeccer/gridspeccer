@@ -77,7 +77,7 @@ def plot():
         core.make_figure(
             osp.splitext(osp.basename(name))[0],
             folder=Path(args.output_folder),
-            filetype=args.ft)
+            filetype=args.ft
         )
 
 
