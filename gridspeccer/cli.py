@@ -30,6 +30,12 @@ def plot():
         ),
     )
     parser.add_argument(
+        "--loglevel",
+        help="Display more or less info (values: DEBUG INFO WARNING ERROR)",
+        type=str,
+        default="INFO",
+    )
+    parser.add_argument(
         "--output-folder",
         help="Folder to output into.",
         type=str,
@@ -45,6 +51,8 @@ def plot():
         raise IOError(
             f"The 'mplrc' argument ('{args.mplrc}') has to be an existing file"
         )
+    log.setLevel(args.loglevel)
+
     mpl.rc_file(args.mplrc)
 
     if len(args.data) == 0:
