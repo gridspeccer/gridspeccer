@@ -11,12 +11,14 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+import matplotlib.patches as mpatches
 from matplotlib.ticker import MaxNLocator
 from matplotlib import cm
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from matplotlib import colorbar
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from skimage.transform import resize
+from mpl_toolkits import axes_grid1
 
 from . import core
 
@@ -874,3 +876,52 @@ def plot_box_plot(axis, data):
         fontsize=12,
     )
     axis.set_xlabel(r"# Distribution ID", fontsize=12)
+
+
+def plot_frame(ax,
+               extent_left=0.18,
+               extent_right=0.10,
+               extent_top=0.20,
+               extent_bottom=0.25,
+               frame_instead_background=False,
+               fill_col="#f2f2f2",
+               ):
+    if frame_instead_background:
+        val_fill = False
+        val_ec = 'black'
+    else:
+        val_fill = True
+        val_ec = None
+
+    fancybox = mpatches.Rectangle(
+        (-extent_left, -extent_bottom),
+        1 + extent_left + extent_right, 1 + extent_bottom + extent_top,
+        facecolor=fill_col, fill=val_fill, alpha=1.00,  # zorder=zorder,
+        transform=ax.transAxes,
+        ec=val_ec,
+        zorder=-3)
+    plt.gcf().patches.append(fancybox)
+
+
+def add_colorbar(im, label, aspect=15, pad_fraction=1.7, **kwargs):
+    """Add a vertical color bar to an image plot."""
+    divider = axes_grid1.make_axes_locatable(im.axes)
+    width = axes_grid1.axes_size.AxesY(im.axes, aspect=1. / aspect)
+    pad = axes_grid1.axes_size.Fraction(pad_fraction, width)
+    current_ax = plt.gca()
+    cax = divider.append_axes("right", size=width, pad=pad)
+    plt.sca(current_ax)
+    cb = im.axes.figure.colorbar(im, cax=cax, **kwargs)
+    cb.set_label(label)
+
+
+def add_colorbar_below(im, label, aspect=15, pad_fraction=5.0, **kwargs):
+    """Add a vertical color bar to an image plot."""
+    divider = axes_grid1.make_axes_locatable(im.axes)
+    width = axes_grid1.axes_size.AxesX(im.axes, aspect=1. / aspect)
+    pad = axes_grid1.axes_size.Fraction(pad_fraction, width)
+    current_ax = plt.gca()
+    cax = divider.append_axes("bottom", size=width, pad=pad)
+    plt.sca(current_ax)
+    cb = im.axes.figure.colorbar(im, cax=cax, orientation='horizontal', **kwargs)
+    cb.set_label(label)
