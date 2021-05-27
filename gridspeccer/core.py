@@ -148,12 +148,18 @@ def make_axes(gridspec, fig_kwargs=None):
     for k, gs_item in list(gridspec.items()):
         # we just add a label to make sure all axes are actually created
         log.debug("Creating subplot: %s", k)
-        if isinstance(gs_item, gs.SubplotSpec):
-            axes[k] = fig.add_subplot(gs_item, label=k)
-        else:
-            # assume a tuple is given, and the second part are options
-            if '3d' in gs_item[1]:
-                axes[k] = fig.add_subplot(gs_item[0], label=k, projection='3d')
+        gs_props = {}
+        if isinstance(gs_item, tuple):
+            if len(gs_item) != 2 or not isinstance(gs_item[1], dict):
+                raise ValueError("Subplots should be specified either as SubplotSpec or (SubplotSpec, dict).")
+            gs_props = gs_item[1]
+            gs_item = gs_item[0]
+
+        kwargs = {"label": k}
+        if gs_props.get('3d', False):
+            kwargs['projection'] = '3d'
+
+        axes[k] = fig.add_subplot(gs_item, **kwargs)
 
     return fig, axes
 
