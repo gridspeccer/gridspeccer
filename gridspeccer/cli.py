@@ -36,8 +36,9 @@ def plot():
     )
     parser.add_argument(
         "--loglevel",
-        help="Display more or less info (values: DEBUG INFO WARNING ERROR)",
+        help="Display more or less info.",
         type=str,
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
         default="INFO",
     )
     parser.add_argument(
