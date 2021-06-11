@@ -1,6 +1,12 @@
 name: lint
 on:
-  [push, pull_request, workflow_dispatch]
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
+
+
 jobs:
   pyright:
     name: lint with pyright
