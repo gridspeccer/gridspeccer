@@ -1,6 +1,6 @@
 name: lint
 on:
-  [push, pull_request]
+  [push, pull_request, workflow_dispatch]
 jobs:
   pyright:
     name: lint with pyright
