@@ -1,0 +1,65 @@
+name: RELEASE start process of bumping, releasing and deploying
+
+on:
+  workflow_dispatch:
+    inputs:
+      NumberIndex:
+        description: 'Index of version number that should be bumped (for version x.y.z we have 0:x,1:y,2:z, so the default 2 is a tiny release).'
+        required: true
+        default: '2'
+      releaseBody:
+        description: 'If you want the release to have a description'
+        required: false
+
+jobs:
+  bumpReleaseDeploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Bump version
+      run: |
+        index=${{github.event.inputs.NumberIndex}}
+        if ! [[ "$index" =~ ^[012]$ ]]; then
+          echo "index must be 0, 1, or 2"; exit 1;
+        fi
+        oldversion=$(grep -Po 'VERSION = "\K[0-9.]*' setup.py)
+        IFS="." read -a versionarray <<< $oldversion
+        for i in 0 1 2; do
+          (( i == index )) && versionarray[${i}]=$((versionarray[${i}]+1))
+          (( i > index )) && versionarray[${i}]=0
+        done
+        newversion=$(IFS="."; echo "${versionarray[*]}")
+        echo "newversion=$newversion" >> $GITHUB_ENV
+        sed -i -E 's/VERSION = "'$oldversion'"/VERSION = "'$newversion'"/' setup.py
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add -f setup.py
+        git commit -m "v${newversion}"
+        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_ENV
+        git push origin
+    - name: Create Release
+      id: create_release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        commit: ${{env.commitHash}}
+        tag: v${{ env.newversion }}
+        name: Release ${{ env.newversion }}
+        body: ${{github.event.inputs.releaseBody}}
+        draft: false
+        prerelease: false
+    - name: Install dependencies for deployment
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install --upgrade build
+        python3 -m pip install --upgrade twine
+    - name: build
+      run: |
+        python3 -m build
+    - name: Deploy to Pypi
+      run: |
+        python3 -m twine upload --username __token__ --password ${{ secrets.PYPI_DEPLOY_KEY }} dist/*
+    - name: test install of pypi package and import 
+      run: |
+        python3 -m pip install gridspeccer==${{ env.newversion }}
+        python3 -c "import gridspeccer"
