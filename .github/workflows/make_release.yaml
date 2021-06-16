@@ -19,7 +19,9 @@ jobs:
     - name: Bump version
       run: |
         i=${{github.event.inputs.versionNumber}}
-        [[ "$i" == '0' ]] || [[ "$i" == '1' ]] || [[ "$i" == '2' ]] || (echo "index must be 0, 1, or 2"; exit 1)
+        if [[ "$i" =~ [^0-9] ]] || (( i < 0 || i > 2 )); then
+          echo "index must be 0, 1, or 2"; exit 1;
+        fi
         oldversion=$(grep -Po 'VERSION = "\K[0-9.]*' setup.py)
         IFS="." read -a versionarray <<< $oldversion
         versionarray[${i}]=$((versionarray[${i}]+1))
