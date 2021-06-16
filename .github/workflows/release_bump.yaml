@@ -1,4 +1,4 @@
-name: create a release with a bumped version number
+name: RELEASE start process of bumping, releasing and deploying
 
 on:
   workflow_dispatch:
@@ -12,35 +12,39 @@ on:
         required: false
 
 jobs:
-  installSetup:
+  bump:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Bump version
       run: |
-        i=${{github.event.inputs.versionNumber}}
-        if ! [[ "$i" =~ ^[012]$ ]]; then
+        index=${{github.event.inputs.NumberIndex}}
+        if ! [[ "$index" =~ ^[012]$ ]]; then
           echo "index must be 0, 1, or 2"; exit 1;
         fi
         oldversion=$(grep -Po 'VERSION = "\K[0-9.]*' setup.py)
         IFS="." read -a versionarray <<< $oldversion
-        versionarray[${i}]=$((versionarray[${i}]+1))
+        for i in 0 1 2; do
+          (( i == index )) && versionarray[${i}]=$((versionarray[${i}]+1))
+          (( i > index )) && versionarray[${i}]=0
+        done
         newversion=$(IFS="."; echo "${versionarray[*]}")
         echo "newversion=$newversion" >> $GITHUB_ENV
         sed -i -E 's/VERSION = "'$oldversion'"/VERSION = "'$newversion'"/' setup.py
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add -f setup.py
-        git commit -m "release ${newversion}"
+        git commit -m "v${newversion}"
+        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_ENV
         git push origin
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ env.newversion }}
-          release_name: Release ${{ env.newversion }}
-          body: ${{github.event.inputs.releaseBody}}
-          draft: false
-          prerelease: false
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        commit: ${{env.commitHash}}
+        tag: v${{ env.newversion }}
+        name: Release ${{ env.newversion }}
+        body: ${{github.event.inputs.releaseBody}}
+        draft: false
+        prerelease: false

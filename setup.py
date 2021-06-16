@@ -11,7 +11,7 @@ setup(
     description="Helper scripts to organize multi-figure plots.",
     author="Oliver Breitwieser",
     author_email="oliver.breitwieser@kip.uni-heidelberg.de",
-    url="https://github.com/obreitwi/gridspeccer",
+    url="https://github.com/gridspeccer/gridspeccer",
     #  packages=find_packages(include=['gridspeccer', 'gridspeccer.*']),
     packages=["gridspeccer"],
     entry_points={"console_scripts": ["gridspeccer = gridspeccer.cli:plot"]},
