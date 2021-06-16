@@ -48,3 +48,18 @@ jobs:
         body: ${{github.event.inputs.releaseBody}}
         draft: false
         prerelease: false
+    - name: Install dependencies for deployment
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install --upgrade build
+        python3 -m pip install --upgrade twine
+    - name: build
+      run: |
+        python3 -m build
+    - name: Deploy to Pypi
+      run: |
+        python3 -m twine upload --repository testpypi --username __token__ --password ${{ secrets.PYPI_TEST }} dist/*
+    - name: test install of pypi package and import 
+      run: |
+        python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps gridspeccer==${{ env.newversion }}
+        python3 -c "import gridspeccer"
