@@ -19,7 +19,7 @@ jobs:
     - name: Bump version
       run: |
         i=${{github.event.inputs.versionNumber}}
-        if ! [[ "$i" =~ ^[012]$ ]]; then 
+        if ! [[ "$i" =~ ^[012]$ ]]; then
           echo "index must be 0, 1, or 2"; exit 1;
         fi
         oldversion=$(grep -Po 'VERSION = "\K[0-9.]*' setup.py)
