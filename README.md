@@ -15,6 +15,7 @@ A standalone plot file that does not need data is `examples`, this is also used 
 [![linting](../../workflows/lint/badge.svg)](../../actions?query=workflow%3Alint)
 
 [![install module](../../workflows/install%20module/badge.svg)](../../actions?query=workflow%3A%22install+module%22)
+[![last Release](../../workflows/release_bump/badge.svg)](../../actions?query=workflow%3A%22release_bump%22)
 [![gsExample with pseudo tex](../../workflows/gsExample%20with%20pseudo%20tex/badge.svg)](../../actions?query=workflow%3A%22gsExample+with+pseudo+tex%22)
 [![gsExample with tex](../../workflows/gsExample%20with%20tex/badge.svg?branch=master)](../../actions?query=workflow%3A%22gsExample+with+tex%22)
 

@@ -58,8 +58,8 @@ jobs:
         python3 -m build
     - name: Deploy to Pypi
       run: |
-        python3 -m twine upload --repository testpypi --username __token__ --password ${{ secrets.PYPI_TEST }} dist/*
+        python3 -m twine upload --username __token__ --password ${{ secrets.PYPI_DEPLOY_KEY }} dist/*
     - name: test install of pypi package and import 
       run: |
-        python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps gridspeccer==${{ env.newversion }}
+        python3 -m pip install gridspeccer==${{ env.newversion }}
         python3 -c "import gridspeccer"
