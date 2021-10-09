@@ -48,6 +48,13 @@ def plot():
         default="../fig",
     )
     parser.add_argument(
+        "--independent-plots-filetype",
+        help="filetype of independent plots. those are queried from additional"
+        "gridspecs that are then plotted independently",
+        type=str,
+        default="None",
+    )
+    parser.add_argument(
         "data",
         nargs="*",
         help="files to look at and folders to look through for fig*.py files",
@@ -58,6 +65,8 @@ def plot():
             f"The 'mplrc' argument ('{args.mplrc}') has to be an existing file"
         )
     log.setLevel(args.loglevel)
+    if args.independent_plots_filetype == "None":
+        args.independent_plots_filetype = False
 
     mpl.rc_file(args.mplrc)
 
@@ -86,7 +95,8 @@ def plot():
         core.make_figure(
             osp.splitext(osp.basename(name))[0],
             folder=Path(args.output_folder),
-            filetype=args.filetype
+            filetype=args.filetype,
+            independent_plots_filetype=args.independent_plots_filetype,
         )
 
 
