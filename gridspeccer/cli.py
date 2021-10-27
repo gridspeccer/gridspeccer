@@ -48,11 +48,26 @@ def plot():
         default="../fig",
     )
     parser.add_argument(
+        "--independent-plots",
+        help="Whether to look for instructions to plot parts of the figure. "
+        "It is intended to easily plot (multiple) subpanels of a figure. "
+        "For usage, see the example script.",
+        default=False,
+        dest='independent_plots', action='store_true',
+    )
+    parser.add_argument(
         "--independent-plots-filetype",
-        help="filetype of independent plots. those are queried from additional"
-        "gridspecs that are then plotted independently",
+        help="Filetype of independent sub-plots. If this is set. the 'independent_plots'"
+        " option is automatically set to True.",
         type=str,
-        default="None",
+        default=None,
+    )
+    parser.add_argument(
+        "--independent-plots-name-format",
+        help="Format string for naming the independent subplots. "
+        "available variables 'folder', 'fig_name', 'sp_name', 'independent_plots_filetype'.",
+        type=str,
+        default="{folder}/{fig_name}_{sp_name}{independent_plots_filetype}",
     )
     parser.add_argument(
         "data",
@@ -65,8 +80,13 @@ def plot():
             f"The 'mplrc' argument ('{args.mplrc}') has to be an existing file"
         )
     log.setLevel(args.loglevel)
-    if args.independent_plots_filetype == "None":
-        args.independent_plots_filetype = False
+    if args.independent_plots_filetype is not None:
+        log.info("due to 'args.independent_plots_filetype' being not empty but "
+                 f"'{args.independent_plots_filetype}' plotting independent_plots")
+        args.independent_plots = True
+    elif args.independent_plots:
+        # if filetype is not set but independent_plots is, make sure plot happens
+        args.independent_plots_filetype = ""
 
     mpl.rc_file(args.mplrc)
 
@@ -97,6 +117,7 @@ def plot():
             folder=Path(args.output_folder),
             filetype=args.filetype,
             independent_plots_filetype=args.independent_plots_filetype,
+            independent_plots_name_format=args.independent_plots_name_format,
         )
 
 

@@ -70,7 +70,13 @@ dataset_to_color = {
 }
 
 
-def make_figure(name, folder=Path("../fig"), filetype=".pdf", independent_plots_filetype=False):
+def make_figure(
+    name,
+    folder=Path("../fig"),
+    filetype=".pdf",
+    independent_plots_filetype=None,
+    independent_plots_name_format="",
+):
     "start making the figure"
     log.info("--- Creating figure: %s ---", name)
 
@@ -107,11 +113,13 @@ def make_figure(name, folder=Path("../fig"), filetype=".pdf", independent_plots_
     except AttributeError:
         log.warning("Not plotting labels for figure %s", name)
 
-    if independent_plots_filetype:
+    if independent_plots_filetype is not None:
+        log.info("Plotting independent_plots")
         try:
-            _, sub_plots = plotscript.get_gridspec(independent_plots=True)
-        except AttributeError:
-            log.error("When retrieving independent_plots as required by the argument given there was a problem.")
+            sub_plots = plotscript.get_gridspec(independent_plots=True)
+        except AttributeError as e:
+            log.error("When retrieving independent_plots as required by the given"
+                      f" CLI argument there was the following problem: \"{e}\"")
             return
         for sp_name, (sp_gs, extension) in sub_plots.items():
             bbox = sp_gs.get_position(fig)
@@ -120,8 +128,11 @@ def make_figure(name, folder=Path("../fig"), filetype=".pdf", independent_plots_
             if extension is not None:
                 extents_inches += np.array(extension)
             bbox_inches = bbox.from_extents(*extents_inches)
-            fig.savefig(f"{folder}/{sp_name}{independent_plots_filetype}",
-                        bbox_inches=bbox_inches)
+            fig.savefig(
+                independent_plots_name_format.format(
+                    folder=folder, fig_name=name, sp_name=sp_name,
+                    independent_plots_filetype=independent_plots_filetype),
+                bbox_inches=bbox_inches)
 
     save_figure(fig, folder / name, filetype)
     p.close(fig)

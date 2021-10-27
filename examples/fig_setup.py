@@ -36,7 +36,13 @@ def get_gridspec(independent_plots=False):
     gs_membranes = gs.GridSpecFromSubplotSpec(2, 1, gs_lower_row[0, 1],
                                               hspace=0.2)
 
-    gs_return_value = {
+    if independent_plots:
+        return {
+            "sometry": (gs_membranes[:], (-0.3, -0.3, 0.2, 0.2)),
+            # "sometry": (gs_tikz[0, 0], (0, -0.3, 0, 0)),
+        }
+
+    return {
         # ### schematics
         "arch": (gs_tikz[0, 0], {'3d': True}),
 
@@ -47,14 +53,6 @@ def get_gridspec(independent_plots=False):
         "membrane_schematic_0": gs_membranes[0, 0],
         "membrane_schematic_1": gs_membranes[1, 0],
     }
-
-    if not independent_plots:
-        return gs_return_value
-    else:
-        return gs_return_value, {
-            "sometry": (gs_membranes[:], (-0.3, -0.3, 0.2, 0.2)),
-            # "sometry": (gs_tikz[0, 0], (0, -0.3, 0, 0)),
-        }
 
 
 def adjust_axes(axes):
