@@ -107,12 +107,6 @@ def make_figure(
         else:
             plot_function(axis)
 
-    log.info("Plotting labels…")
-    try:
-        getattr(plotscript, "plot_labels")(axes)
-    except AttributeError:
-        log.warning("Not plotting labels for figure %s", name)
-
     if independent_plots_filetype is not None:
         log.info("Plotting independent_plots")
         try:
@@ -133,6 +127,12 @@ def make_figure(
                     folder=folder, fig_name=name, sp_name=sp_name,
                     independent_plots_filetype=independent_plots_filetype),
                 bbox_inches=bbox_inches)
+
+    log.info("Plotting labels…")
+    try:
+        getattr(plotscript, "plot_labels")(axes)
+    except AttributeError:
+        log.warning("Not plotting labels for figure %s", name)
 
     save_figure(fig, folder / name, filetype)
     p.close(fig)
