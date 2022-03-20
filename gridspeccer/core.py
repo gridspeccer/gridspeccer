@@ -181,18 +181,30 @@ def plot_labels(
     label_zpos=None,
     label_color=None,
     fontdict=None,
+    nonlatex=False,
+    lowercase=True,
 ):
-    "plot labels"
+    """plot labels
+
+    Parameters
+    ----------
+    nonlatex : bool
+        depending on whether true or fake latex is used, the formatting calls
+        have to be included or left out
+    lowercase : bool
+        If false use uppercase as labels
+    """
     label_xpos = label_xpos if label_xpos is not None else {}
     label_ypos = label_ypos if label_ypos is not None else {}
     label_zpos = label_zpos if label_zpos is not None else {}
     label_color = label_color if label_color is not None else {}
 
-    for label_idx, char in zip(labels_to_plot, string.ascii_lowercase):
+    for label_idx, char in zip(labels_to_plot,
+                               string.ascii_lowercase if lowercase else string.ascii_uppercase):
         log.info("Subplot %s receives label %s", label_idx, char)
         plot_caption(
             axes[label_idx],
-            "\\textbf{" + char + "}",
+            "\\textbf{" + char + "}" if not nonlatex else char,
             xpos=label_xpos.get(label_idx, xpos_default),
             ypos=label_ypos.get(label_idx, ypos_default),
             zpos=label_zpos.get(label_idx, zpos_default),
