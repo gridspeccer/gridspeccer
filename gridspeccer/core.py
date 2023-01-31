@@ -191,8 +191,9 @@ def plot_labels(
     latexformat : bool
         depending on whether true or fake latex is used, the formatting calls
         have to be included or left out
-    lowercase : bool
-        If false use uppercase as labels
+    listoflabels: iterable
+        List of labels to be used for labelling. by default lowercase letters,
+        but can be any list to accomodate uppercase or b1, b2 like labels.
     """
     label_xpos = label_xpos if label_xpos is not None else {}
     label_ypos = label_ypos if label_ypos is not None else {}
