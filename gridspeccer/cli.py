@@ -20,7 +20,7 @@ def plot():
     """plot a figure"""
     parser = argparse.ArgumentParser(
         prog="gridspeccer",
-        description="Plotting tool for easier poisitioning.",
+        description="Plotting tool for easier positioning.",
     )
     parser.add_argument(
         "--filetype",
@@ -43,7 +43,7 @@ def plot():
     )
     parser.add_argument(
         "--output-folder",
-        help="Folder to output into.",
+        help="Folder to output into, default is `../fig`.",
         type=str,
         default="../fig",
     )
