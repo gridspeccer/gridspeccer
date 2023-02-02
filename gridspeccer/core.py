@@ -181,16 +181,16 @@ def plot_labels(
     label_zpos=None,
     label_color=None,
     fontdict=None,
-    latexformat=True,
+    latexformat="\\textbf{{{}}}",
     listoflabels=string.ascii_lowercase,
 ):
     """plot labels
 
     Parameters
     ----------
-    latexformat : bool
-        depending on whether true or fake latex is used, the formatting calls
-        have to be included or left out
+    latexformat: string
+        Format string used for setting the labels, allowing arbitrary latex
+        formatting. To not use latex formatting, set it to '{}'.
     listoflabels: iterable
         List of labels to be used for labelling. by default lowercase letters,
         but can be any list to accomodate uppercase or b1, b2 like labels.
@@ -205,7 +205,7 @@ def plot_labels(
         log.info("Subplot %s receives label %s", label_idx, char)
         plot_caption(
             axes[label_idx],
-            "\\textbf{" + char + "}" if latexformat else char,
+            latexformat.format(char),
             xpos=label_xpos.get(label_idx, xpos_default),
             ypos=label_ypos.get(label_idx, ypos_default),
             zpos=label_zpos.get(label_idx, zpos_default),
