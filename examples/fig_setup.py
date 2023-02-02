@@ -7,6 +7,7 @@ The actual plot functions are below and are named in accordance to the names in
 the get_gridspec function.
 """
 
+import matplotlib as mpl
 from matplotlib import gridspec as gs
 import numpy as np
 import matplotlib.patches as mpatches
@@ -82,6 +83,7 @@ def plot_labels(axes):
                      label_zpos={
                          "arch": 7.5,
                      },
+                     latexformat="\\textbf{{{}}}" if mpl.rcParams['text.usetex'] else "{}",
                      )
 
 
