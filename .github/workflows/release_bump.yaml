@@ -59,6 +59,8 @@ jobs:
     - name: Deploy to Pypi
       run: |
         python3 -m twine upload --username __token__ --password ${{ secrets.PYPI_DEPLOY_KEY }} dist/*
+    - name: wait 2min for pypi to have sources ready
+      run: sleep 120
     - name: test install of pypi package and import 
       run: |
         python3 -m pip install gridspeccer==${{ env.newversion }}
