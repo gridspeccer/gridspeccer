@@ -18,7 +18,7 @@ from gridspeccer.core import log
 from gridspeccer import aux
 
 
-def get_gridspec():
+def get_gridspec(independent_plots=False):
     """
         Return dict: plot -> gridspec
     """
@@ -36,6 +36,12 @@ def get_gridspec():
                                               width_ratios=[1.5, 1])
     gs_membranes = gs.GridSpecFromSubplotSpec(2, 1, gs_lower_row[0, 1],
                                               hspace=0.2)
+
+    if independent_plots:
+        return {
+            "sometry": (gs_membranes[:], (-0.3, -0.3, 0.2, 0.2)),
+            # "sometry": (gs_tikz[0, 0], (0, -0.3, 0, 0)),
+        }
 
     return {
         # ### schematics

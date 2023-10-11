@@ -70,7 +70,13 @@ dataset_to_color = {
 }
 
 
-def make_figure(name, folder=Path("../fig"), filetype=".pdf"):
+def make_figure(
+    name,
+    folder=Path("../fig"),
+    filetype=".pdf",
+    independent_plots_filetype=None,
+    independent_plots_name_format="",
+):
     "start making the figure"
     log.info("--- Creating figure: %s ---", name)
 
@@ -100,6 +106,27 @@ def make_figure(name, folder=Path("../fig"), filetype=".pdf"):
             log.warning("Plotscript missing for subplot <%s> in figure <%s>!", k, name)
         else:
             plot_function(axis)
+
+    if independent_plots_filetype is not None:
+        log.info("Plotting independent_plots")
+        try:
+            sub_plots = plotscript.get_gridspec(independent_plots=True)
+        except AttributeError as e:
+            log.error("When retrieving independent_plots as required by the given"
+                      f" CLI argument there was the following problem: \"{e}\"")
+            return
+        for sp_name, (sp_gs, extension) in sub_plots.items():
+            bbox = sp_gs.get_position(fig)
+            fig_width, fig_height = fig.bbox_inches.bounds[2:]
+            extents_inches = bbox.extents * np.array([fig_width, fig_height, fig_width, fig_height])
+            if extension is not None:
+                extents_inches += np.array(extension)
+            bbox_inches = bbox.from_extents(*extents_inches)
+            fig.savefig(
+                independent_plots_name_format.format(
+                    folder=folder, fig_name=name, sp_name=sp_name,
+                    independent_plots_filetype=independent_plots_filetype),
+                bbox_inches=bbox_inches)
 
     log.info("Plotting labels…")
     try:
