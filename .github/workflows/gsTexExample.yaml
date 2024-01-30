@@ -20,7 +20,7 @@ jobs:
     container:
       image: texlive/texlive
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: update apt-get
       run: apt-get update
     - name: install build-essential, python3-dev, python3-full, python3-venv
