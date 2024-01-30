@@ -60,7 +60,9 @@ def adjust_axes(axes):
     for k in [
         "arch",
     ]:
-        axes[k].set_frame_on(False)
+        # 3d projections cannot turn off axes
+        if axes[k].set_frame_on is not None:
+            axes[k].set_frame_on(False)
 
 
 def plot_labels(axes):
