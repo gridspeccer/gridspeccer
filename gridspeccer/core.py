@@ -180,6 +180,7 @@ def plot_labels(
     label_ypos=None,
     label_zpos=None,
     label_color=None,
+    label_size=None,
     fontdict=None,
     latexformat="\\textbf{{{}}}",
     listoflabels=string.ascii_lowercase,
@@ -199,6 +200,7 @@ def plot_labels(
     label_ypos = label_ypos if label_ypos is not None else {}
     label_zpos = label_zpos if label_zpos is not None else {}
     label_color = label_color if label_color is not None else {}
+    label_size = label_size if label_size is not None else {}
 
     for label_idx, char in zip(labels_to_plot,
                                listoflabels):
@@ -210,11 +212,12 @@ def plot_labels(
             ypos=label_ypos.get(label_idx, ypos_default),
             zpos=label_zpos.get(label_idx, zpos_default),
             color=label_color.get(label_idx, "k"),
+            size=label_size.get(label_idx, 16),
             fontdict=fontdict,
         )
 
 
-def plot_caption(axis, caption, xpos=0.04, ypos=0.88, zpos=0.0, color="k", fontdict=None):
+def plot_caption(axis, caption, xpos=0.04, ypos=0.88, zpos=0.0, color="k", size=16, fontdict=None):
     "plot caption"
     # find out how our caption will look in reality
     caption_args = {
@@ -222,7 +225,7 @@ def plot_caption(axis, caption, xpos=0.04, ypos=0.88, zpos=0.0, color="k", fontd
         "va": "bottom",
         # "weight": "bold",
         "style": "normal",
-        "size": 16,
+        "size": size,
         "color": color,
         "zorder": 1000,
     }
