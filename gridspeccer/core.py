@@ -212,7 +212,7 @@ def plot_labels(
             ypos=label_ypos.get(label_idx, ypos_default),
             zpos=label_zpos.get(label_idx, zpos_default),
             color=label_color.get(label_idx, "k"),
-            size=label_size.get(label_idx, 16),
+            size=label_size.get(label_idx, 16) if isinstance(label_size, dict) else label_size,
             fontdict=fontdict,
         )
 
